@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "react-router";
-import { useCreateBookMutation, useUpdateBookMutation } from "@/lib/api";
+import { useCreateBookMutation } from "@/lib/api";
 import type { Book } from "@/types/schema";
 import { genres } from "@/types/schema";
 
@@ -48,10 +48,9 @@ type FormData = z.infer<typeof formSchema>;
 export default function BookForm({ book, onCancel }: BookFormProps) {
   const location = useLocation();
   const [createBook, { isLoading: isCreating }] = useCreateBookMutation();
-  const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
 
   const isEditing = !!book;
-  const isLoading = isCreating || isUpdating;
+  const isLoading = isCreating;
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -78,46 +77,34 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
     };
 
     try {
-      if (isEditing) {
-        await updateBook({ id: book!.id, data: payload }).unwrap();
-        toast.success(`"${data.title}" has been updated successfully.`);
-      } else {
-        await createBook(payload).unwrap();
-        toast.success(`"${data.title}" has been added to the library.`);
-      }
-
-      // Redirect (or use navigate if you have react-router v6)
+      await createBook(payload).unwrap();
+      toast.success(`"${data.title}" has been added to the library.`);
       location.pathname = "/books";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong.");
     }
   };
 
   return (
-    <div className="container mx-auto">
+    <div>
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onCancel}
-            className="text-gray-600 hover:text-gray-800"
-          >
+          <Button variant="ghost" size="sm" onClick={onCancel} className="">
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <h2 className="text-2xl font-semibold text-gray-900">
+          <h2 className="text-2xl font-semibold ">
             {isEditing ? "Edit Book" : "Add New Book"}
           </h2>
         </div>
-        <p className="text-gray-600">
+        <p className="">
           {isEditing
             ? "Update the book details"
             : "Enter the book details to add it to your library"}
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className=" rounded-lg shadow-sm border p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -155,7 +142,10 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Genre *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select genre" />
@@ -208,16 +198,22 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Available?</FormLabel>
-                    <FormControl>
-                      <select
-                        className="input w-full border rounded px-3 py-2"
-                        value={field.value ? "true" : "false"}
-                        onChange={(e) => field.onChange(e.target.value === "true")}
-                      >
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                      </select>
-                    </FormControl>
+                    <Select
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      defaultValue={field.value ? "true" : "false"}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select availability" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="true">Yes</SelectItem>
+                        <SelectItem value="false">No</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -231,24 +227,19 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Optional description..." {...field} />
+                    <Textarea
+                      placeholder="Optional description..."
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="flex items-center gap-4 pt-4 border-t border-gray-200">
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="bg-accent-foreground/60 hover:bg-accent-foreground/70 "
-              >
-                {isLoading
-                  ? "Saving..."
-                  : isEditing
-                  ? "Update Book"
-                  : "Add Book"}
+            <div className="flex items-center gap-4 pt-4 border-t">
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Adding..." : "Add Book"}
               </Button>
               <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel

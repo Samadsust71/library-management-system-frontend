@@ -20,8 +20,8 @@ const Header = () => {
   };
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-10 supports-[backdrop-filter]:bg-background/60">
-      <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to={"/"} className=" w-fit flex items-center justify-center h-16">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <Link to={"/"} className=" w-fit flex items-center h-16">
           <img
             src="/src/assets/logo.png"
             alt="logo"

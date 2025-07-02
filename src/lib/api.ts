@@ -1,16 +1,16 @@
-import type { Book } from '@/types/schema';
+import type { DBBook } from '@/types/schema';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://library-management-app-eta.vercel.app/api'
+    baseUrl: 'http://localhost:5000/api'
   }),
   tagTypes: ['Book', 'BorrowRecord', 'BorrowSummary'],
   endpoints: (builder) => ({
     // Book endpoints
-    getBooks: builder.query<Book[], void>({
+    getBooks: builder.query<DBBook[], void>({
       query: () => '/books',
       providesTags: ['Book'],
     }),
@@ -26,7 +26,7 @@ export const api = createApi({
       }),
       invalidatesTags: ['Book'],
     }),
-     updateBook: builder.mutation<Book, { id: string; data: Book }>({
+     updateBook: builder.mutation({
       query: ({ id, data }) => ({
         url: `/books/${id}`,
         method: 'PUT',
@@ -38,10 +38,25 @@ export const api = createApi({
         'BorrowSummary',
       ],
     }),
+     deleteBook: builder.mutation({
+      query: (id) => ({
+        url: `/books/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Book', 'BorrowSummary'],
+    }),
+     borrowBook: builder.mutation({
+      query: (borrowData) => ({
+        url: '/borrow',
+        method: 'POST',
+        body: borrowData,
+      }),
+      invalidatesTags: ['Book', 'BorrowRecord', 'BorrowSummary'],
+    }),
   }),
 });
 
 export const {
   useGetBooksQuery,
-  useGetBookQuery, useCreateBookMutation, useUpdateBookMutation
+  useGetBookQuery, useCreateBookMutation, useUpdateBookMutation, useDeleteBookMutation,useBorrowBookMutation
 } = api;

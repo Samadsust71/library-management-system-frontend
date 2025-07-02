@@ -1,7 +1,7 @@
 
 
 export const genres = ['FICTION', 'NON_FICTION', 'SCIENCE', 'HISTORY', 'BIOGRAPHY', 'FANTASY'] as const;
-type Genre = typeof genres[number];
+export type Genre = typeof genres[number];
 
 export interface Book {
   title: string;

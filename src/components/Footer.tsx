@@ -15,13 +15,14 @@ const Footer = () => {
             <div className="flex items-center mb-4">
               <Link
                 to={"/"}
-                className=" flex items-center justify-center"
+                className="flex items-center justify-center"
               >
                 <img
                   src="/src/assets/logo.png"
                   alt="logo"
-                  className="w-fit h-16 object-cover"
+                  className="h-16 object-cover"
                 />
+                <h1 className="text-[#3BAA4A] text-xl font-bold">Baatighar</h1>
               </Link>
             </div>
             <p className="text-sm text-accent-foreground/80">

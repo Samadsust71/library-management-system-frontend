@@ -5,8 +5,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: '/api',
-    credentials: 'include',
+    baseUrl: 'https://library-management-app-eta.vercel.app/api'
   }),
   tagTypes: ['Book', 'BorrowRecord', 'BorrowSummary'],
   endpoints: (builder) => ({
@@ -15,14 +14,34 @@ export const api = createApi({
       query: () => '/books',
       providesTags: ['Book'],
     }),
-    getBook: builder.query<Book, number>({
+    getBook: builder.query({
       query: (id) => `/books/${id}`,
       providesTags: (result, error, id) => [{ type: 'Book', id }],
-    })
+    }),
+    createBook: builder.mutation({
+      query: (book) => ({
+        url: '/books',
+        method: 'POST',
+        body: book,
+      }),
+      invalidatesTags: ['Book'],
+    }),
+     updateBook: builder.mutation<Book, { id: string; data: Book }>({
+      query: ({ id, data }) => ({
+        url: `/books/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Book', id },
+        'Book',
+        'BorrowSummary',
+      ],
+    }),
   }),
 });
 
 export const {
   useGetBooksQuery,
-  useGetBookQuery
+  useGetBookQuery, useCreateBookMutation, useUpdateBookMutation
 } = api;

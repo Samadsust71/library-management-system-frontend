@@ -53,10 +53,14 @@ export const api = createApi({
       }),
       invalidatesTags: ['Book', 'BorrowRecord', 'BorrowSummary'],
     }),
+     getBorrowSummary: builder.query({
+      query: () => '/borrow',
+      providesTags: ['BorrowSummary'],
+    }),
   }),
 });
 
 export const {
   useGetBooksQuery,
-  useGetBookQuery, useCreateBookMutation, useUpdateBookMutation, useDeleteBookMutation,useBorrowBookMutation
+  useGetBookQuery, useCreateBookMutation, useUpdateBookMutation, useDeleteBookMutation,useBorrowBookMutation,useGetBorrowSummaryQuery
 } = api;

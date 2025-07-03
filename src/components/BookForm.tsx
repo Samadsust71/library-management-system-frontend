@@ -21,13 +21,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { useLocation } from "react-router";
-import { useCreateBookMutation } from "@/lib/api";
-import type { Book } from "@/types/schema";
+import { useNavigate } from "react-router";
+import {
+  useCreateBookMutation,
+  useUpdateBookMutation,
+} from "@/lib/api";
+import type { DBBook } from "@/types/schema";
 import { genres } from "@/types/schema";
 
 interface BookFormProps {
-  book?: Book;
+  book?: DBBook; // Include _id if editing
   onCancel: () => void;
 }
 
@@ -46,11 +49,14 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export default function BookForm({ book, onCancel }: BookFormProps) {
-  const location = useLocation();
+  const navigate = useNavigate();
   const [createBook, { isLoading: isCreating }] = useCreateBookMutation();
+  const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
+
+  console.log(book)
 
   const isEditing = !!book;
-  const isLoading = isCreating;
+  const isLoading = isCreating || isUpdating;
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -77,10 +83,20 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
     };
 
     try {
-      await createBook(payload).unwrap();
-      toast.success(`"${data.title}" has been added to the library.`);
-      location.pathname = "/books";
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (isEditing) {
+        if (!book?._id) {
+          toast.error("Book ID is missing for edit.");
+          return;
+        }
+        await updateBook({ id: book._id, data: payload }).unwrap();
+        toast.success(`"${data.title}" has been updated in the library.`);
+      } else {
+        await createBook(payload).unwrap();
+        toast.success(`"${data.title}" has been added to the library.`);
+      }
+
+      navigate("/books");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong.");
     }
@@ -90,21 +106,21 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
     <div>
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <Button variant="ghost" size="sm" onClick={onCancel} className="">
+          <Button variant="ghost" size="sm" onClick={onCancel}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <h2 className="text-2xl font-semibold ">
+          <h2 className="text-2xl font-semibold">
             {isEditing ? "Edit Book" : "Add New Book"}
           </h2>
         </div>
-        <p className="">
+        <p className="text-gray-600">
           {isEditing
             ? "Update the book details"
             : "Enter the book details to add it to your library"}
         </p>
       </div>
 
-      <div className=" rounded-lg shadow-sm border p-6">
+      <div className="rounded-lg shadow-sm border p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -239,7 +255,13 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
 
             <div className="flex items-center gap-4 pt-4 border-t">
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Adding..." : "Add Book"}
+                {isLoading
+                  ? isEditing
+                    ? "Updating..."
+                    : "Adding..."
+                  : isEditing
+                    ? "Update Book"
+                    : "Add Book"}
               </Button>
               <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel

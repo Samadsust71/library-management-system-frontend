@@ -53,7 +53,6 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
   const [createBook, { isLoading: isCreating }] = useCreateBookMutation();
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
 
-  console.log(book)
 
   const isEditing = !!book;
   const isLoading = isCreating || isUpdating;

@@ -3,11 +3,12 @@ import { useGetBookQuery } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Edit, Book } from 'lucide-react';
 import { Link, useParams } from 'react-router';
+import type { DBBook } from '@/types/schema';
 
 export default function BookDetails() {
   const { id } = useParams();
   const { data, isLoading, error } = useGetBookQuery(id);
-  const book = data.data? data.data: {}
+   const book: DBBook | null = data?.data ?? null;
 
   if (isLoading) {
     return (
@@ -106,14 +107,14 @@ export default function BookDetails() {
               )}
 
               <div className="flex gap-3 pt-4">
-                <Link to={`/edit-book/${book.id}`}>
+                <Link to={`/edit-book/${book._id}`}>
                   <Button variant="outline" className="flex items-center gap-2">
                     <Edit className="w-4 h-4" />
                     Edit Book
                   </Button>
                 </Link>
-                {book.availableCopies > 0 && (
-                  <Link to={`/borrow/${book.id}`}>
+                {book.copies > 0 && (
+                  <Link to={`/borrow/${book._id}`}>
                     <Button className="bg-success-600 hover:bg-success-700 text-white">
                       Borrow Book
                     </Button>

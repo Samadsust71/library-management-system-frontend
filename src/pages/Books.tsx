@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetBooksQuery } from "@/lib/api";
 import BookTable from "@/components/BookTable";
 import { Button } from "@/components/ui/button";
@@ -15,14 +15,24 @@ import type { DBBook } from "@/types/schema";
 import { Link } from "react-router";
 import BorrowModal from "@/components/BorrowModal";
 
+// const ITEMS_PER_PAGE = 5;
+
 export default function Books() {
-  const { data, isLoading, error } = useGetBooksQuery();
-  const books = Array.isArray(data?.data) ? data.data : [];
   const [selectedBook, setSelectedBook] = useState<DBBook | null>(null);
   const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [genreFilter, setGenreFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+   const [itemsPerPage, setItemsPerPage] = useState(5);
+
+ const { data, isLoading, error } = useGetBooksQuery({
+    page: currentPage,
+    limit: itemsPerPage,
+  });
+
+  const books = Array.isArray(data?.data) ? data.data : [];
+  const totalPages = data?.meta?.totalPages || 1;
 
   const handleBorrowClick = (book: DBBook) => {
     setSelectedBook(book);
@@ -33,8 +43,10 @@ export default function Books() {
     setIsBorrowModalOpen(false);
     setSelectedBook(null);
   };
+ useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
 
-  // Filter books based on search term, genre, and status
   const filteredBooks = books.filter((book) => {
     const matchesSearch =
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,8 +64,13 @@ export default function Books() {
     return matchesSearch && matchesGenre && matchesStatus;
   });
 
-  // Get unique genres for filter
   const uniqueGenres = [...new Set(books.map((book) => book.genre))];
+
+   const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -93,10 +110,13 @@ export default function Books() {
 
   return (
     <div>
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
           <h2 className="text-2xl font-semibold text-accent-foreground">All Books</h2>
-          <p className="text-accent-foreground/70 mt-1">Manage your library collection</p>
+          <p className="text-accent-foreground/70 mt-1">
+            Manage your library collection
+          </p>
         </div>
         <Link to="/create-book">
           <Button className="bg-accent/80 hover:bg-accent/90 text-accent-foreground flex items-center gap-2">
@@ -106,7 +126,7 @@ export default function Books() {
         </Link>
       </div>
 
-      {/* Search and Filter Bar */}
+      {/* Filter Bar */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
@@ -144,12 +164,59 @@ export default function Books() {
                 <SelectItem value="unavailable">Unavailable</SelectItem>
               </SelectContent>
             </Select>
+
+            {/* 👇 NEW Items Per Page */}
+            <Select
+              value={String(itemsPerPage)}
+              onValueChange={(val) => setItemsPerPage(Number(val))}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Items Per Page" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5 books per page</SelectItem>
+                <SelectItem value="10">10 books per page</SelectItem>
+                <SelectItem value="20">20 books per page</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
 
-      {/* Books Table */}
+      {/* Book Table */}
       <BookTable books={filteredBooks} onBorrowClick={handleBorrowClick} />
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-6 gap-2 flex-wrap">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </Button>
+
+        {[...Array(totalPages)].map((_, index) => (
+          <Button
+            key={index}
+            variant={currentPage === index + 1 ? "default" : "outline"}
+            size="sm"
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </Button>
+        ))}
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </Button>
+      </div>
 
       {/* Borrow Modal */}
       <BorrowModal

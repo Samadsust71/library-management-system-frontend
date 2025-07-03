@@ -1,12 +1,12 @@
 
 import BookForm from '@/components/BookForm';
-import { useLocation } from 'react-router';
+import {  useNavigate } from 'react-router';
 
 export default function AddBook() {
-  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleCancel = () => {
-    location.pathname ='/books';
+    navigate('/books');
   };
 
   return <BookForm onCancel={handleCancel} />;

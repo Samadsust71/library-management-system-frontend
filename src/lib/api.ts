@@ -1,23 +1,33 @@
 import type { DBBook } from '@/types/schema';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+interface PaginatedBooksResponse {
+  data: DBBook[];
+  meta: {
+    totalPages: number;
+    currentPage: number;
+    totalItems: number;
+  };
+}
 
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api'
+    baseUrl: 'http://localhost:5000/api',
   }),
   tagTypes: ['Book', 'BorrowRecord', 'BorrowSummary'],
   endpoints: (builder) => ({
-    // Book endpoints
-    getBooks: builder.query<DBBook[], void>({
-      query: () => '/books',
+    // ✅ Paginated getBooks endpoint
+    getBooks: builder.query<PaginatedBooksResponse, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 10 } = {}) => `/books?page=${page}&limit=${limit}`,
       providesTags: ['Book'],
     }),
+
     getBook: builder.query({
       query: (id) => `/books/${id}`,
       providesTags: (result, error, id) => [{ type: 'Book', id }],
     }),
+
     createBook: builder.mutation({
       query: (book) => ({
         url: '/books',
@@ -26,7 +36,8 @@ export const api = createApi({
       }),
       invalidatesTags: ['Book'],
     }),
-     updateBook: builder.mutation({
+
+    updateBook: builder.mutation({
       query: ({ id, data }) => ({
         url: `/books/${id}`,
         method: 'PUT',
@@ -38,14 +49,16 @@ export const api = createApi({
         'BorrowSummary',
       ],
     }),
-     deleteBook: builder.mutation({
+
+    deleteBook: builder.mutation({
       query: (id) => ({
         url: `/books/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Book', 'BorrowSummary'],
     }),
-     borrowBook: builder.mutation({
+
+    borrowBook: builder.mutation({
       query: (borrowData) => ({
         url: '/borrow',
         method: 'POST',
@@ -53,7 +66,8 @@ export const api = createApi({
       }),
       invalidatesTags: ['Book', 'BorrowRecord', 'BorrowSummary'],
     }),
-     getBorrowSummary: builder.query({
+
+    getBorrowSummary: builder.query({
       query: () => '/borrow',
       providesTags: ['BorrowSummary'],
     }),
@@ -62,5 +76,10 @@ export const api = createApi({
 
 export const {
   useGetBooksQuery,
-  useGetBookQuery, useCreateBookMutation, useUpdateBookMutation, useDeleteBookMutation,useBorrowBookMutation,useGetBorrowSummaryQuery
+  useGetBookQuery,
+  useCreateBookMutation,
+  useUpdateBookMutation,
+  useDeleteBookMutation,
+  useBorrowBookMutation,
+  useGetBorrowSummaryQuery,
 } = api;

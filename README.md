@@ -1,69 +1,104 @@
-# React + TypeScript + Vite
+# 📚 Library => A Library Management System App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive Library Management System to manage books, borrowers, and lending operations — built with **React**, **TypeScript**, **Tailwind CSS**, **ShadCN UI**, and **Redux Toolkit Query** for API state.
 
-Currently, two official plugins are available:
+![Library App Banner](./src/assets/logo3.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Live Link](https://library-management-system-frontend-bice.vercel.app)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Features
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 🔍 View and search books with filters by title, genre, or availability
+- ➕ Add, edit, and delete book entries
+- 📊 Borrow summary dashboard with due date tracking
+- 🧾 Borrow book modal with validation and auto-date setup
+- 🌗 Light/Dark mode support (ShadCN Theme Toggle)
+- 📦 Pagination and items-per-page control
+- ✅ Responsive design with mobile nav drawer
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🧪 Tech Stack
+
+| Tech               | Description                         |
+|--------------------|-------------------------------------|
+| React + Vite       | Frontend framework & bundler        |
+| TypeScript         | Type-safe JavaScript                |
+| Tailwind CSS       | Utility-first CSS framework         |
+| ShadCN UI          | UI components                       |
+| Redux Toolkit Query| API data fetching and caching       |
+| Zod + RHF          | Form schema validation              |
+
+---
+
+
+## 📦 Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Samadsust71/library-management-system-frontend.git
+
+# 2. Navigate to the project
+cd library-management-system-frontend
+
+# 3. Install dependencies
+npm install
+
+# 4. Start the dev server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🧩 Folder Structure
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+src/
+├── components/         # Reusable UI components
+├── lib/api.ts          # API slice (Redux Toolkit Query)
+├── pages/              # Route-level components
+├── types/schema.ts     # TypeScript types
+├── assets/             # Static images (e.g., logo)
+├── layout              # App layout 
+└── main.tsx            # Entry point
 ```
+
+---
+
+## ✅ Todos
+
+- [ ] Add authentication and user roles
+- [ ] Export data to CSV/PDF
+- [ ] Add unit tests with Vitest or Jest
+- [ ] Implement overdue email notifications
+
+---
+
+## 📌 Project Setup Info
+
+| Key               | Value                |
+|------------------|----------------------|
+| Framework        | React + Vite         |
+| Language         | TypeScript           |
+| State Management | Redux Toolkit Query  |
+| Styling          | Tailwind + ShadCN    |
+| UI Notifications | Sonner               |
+
+
+---
+
+## 🙌 Acknowledgements
+
+- [ShadCN UI](https://ui.shadcn.com/)
+- [Redux Toolkit Query](https://redux-toolkit.js.org/rtk-query/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+---
+
+## 👨‍💻 Author
+
+**Samad Reza**  
+📫 [Contact Me on LinkedIn](https://www.linkedin.com/in/abdus-samad-reza)  
+🌍 [Portfolio](https://abdus-samad-beige.vercel.app)

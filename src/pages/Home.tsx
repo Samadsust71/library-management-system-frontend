@@ -11,7 +11,7 @@ import { Link } from "react-router";
 
 const Home = () => {
   const { data, isError, isLoading } = useGetBooksQuery({
-    limit: 10,
+    limit: 5,
   });
   const [selectedBook, setSelectedBook] = useState<DBBook | null>(null);
   const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);

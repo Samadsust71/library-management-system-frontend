@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import type { Borrow } from "@/types/schema";
 import Loading from "./Loading";
 import Error from "./Error";
+import { getBookColor } from "@/lib/utils";
 
 export default function BorrowSummary() {
   const { data, isLoading, error } = useGetBorrowSummaryQuery(undefined);
@@ -45,18 +46,6 @@ export default function BorrowSummary() {
     return latest && new Date(latest) < today;
   }).length;
 
-  const getBookColor = (index: number) => {
-    const colors = [
-      "from-emerald-400 to-emerald-500",
-      "from-cyan-500 to-cyan-600",
-      "from-purple-500 to-purple-600",
-      "from-green-500 to-green-600",
-      "from-blue-500 to-blue-600",
-      "from-indigo-500 to-indigo-600",
-    ];
-    return colors[index % colors.length];
-  };
-
   if (isLoading) {
     return <Loading />;
   }
@@ -71,7 +60,7 @@ export default function BorrowSummary() {
   }
 
   return (
-    <div>
+    <>
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-card-foreground">
           Borrow Summary
@@ -213,6 +202,6 @@ export default function BorrowSummary() {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }

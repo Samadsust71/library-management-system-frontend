@@ -21,10 +21,6 @@ export interface Borrow  {
   totalQuantity: number;
   dueDates: string[];
 }
-// export interface DBBorrow extends Borrow  {
-//   _id:string;
-
-// }
 export interface DBBook extends Book {
   _id: string; 
   createdAt: Date; 

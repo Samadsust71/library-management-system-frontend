@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,7 +16,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Book as BookIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
+import { format } from "date-fns";
+import { CalendarIcon, Book as BookIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useBorrowBookMutation } from "@/lib/api";
 import type { DBBook } from "@/types/schema";
@@ -20,17 +28,13 @@ import type { DBBook } from "@/types/schema";
 const borrowSchema = z.object({
   book: z.string().min(1, "Book ID is required"),
   quantity: z.coerce.number().min(1, "At least 1 book must be borrowed"),
-  dueDate: z
-    .string()
-    .refine(
-      (date) => {
-        const selectedDate = new Date(date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return selectedDate > today;
-      },
-      { message: "Due date must be in the future" }
-    ),
+  dueDate: z.date().refine((date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date > today;
+  }, {
+    message: "Due date must be in the future"
+  }),
 });
 
 type BorrowFormData = z.infer<typeof borrowSchema>;
@@ -41,11 +45,11 @@ interface BorrowModalProps {
   onClose: () => void;
 }
 
-const  BorrowModal = ({
+export default function BorrowModal({
   book,
   isOpen,
   onClose,
-}: BorrowModalProps) => {
+}: BorrowModalProps) {
   const [borrowBook, { isLoading }] = useBorrowBookMutation();
 
   const form = useForm<BorrowFormData>({
@@ -53,27 +57,28 @@ const  BorrowModal = ({
     defaultValues: {
       book: book?._id || "",
       quantity: 1,
-      dueDate: "",
+      dueDate: new Date(),
     },
   });
 
-  useEffect(() => {
-    const twoWeeksFromNow = new Date();
-    twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
-    const formattedDate = twoWeeksFromNow.toISOString().split("T")[0];
-    form.setValue("dueDate", formattedDate);
-  }, [form]);
+  const dueDate = form.watch("dueDate");
 
   useEffect(() => {
     if (book) {
       form.setValue("book", book._id);
       form.setValue("quantity", 1);
+      const twoWeeksLater = new Date();
+      twoWeeksLater.setDate(twoWeeksLater.getDate() + 14);
+      form.setValue("dueDate", twoWeeksLater);
     }
   }, [book, form]);
 
   const onSubmit = async (data: BorrowFormData) => {
     try {
-      await borrowBook(data).unwrap();
+      await borrowBook({
+        ...data,
+        dueDate: data.dueDate.toISOString().split("T")[0],
+      }).unwrap();
       toast.success(`"${book?.title}" has been successfully borrowed.`);
       onClose();
       form.reset();
@@ -88,10 +93,6 @@ const  BorrowModal = ({
   };
 
   if (!book) return null;
-
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const minDate = tomorrow.toISOString().split("T")[0];
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -138,13 +139,29 @@ const  BorrowModal = ({
 
           <div>
             <Label htmlFor="dueDate">Due Date *</Label>
-            <Input
-              id="dueDate"
-              type="date"
-              min={minDate}
-              {...form.register("dueDate")}
-              className="mt-2"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full mt-2 justify-start text-left font-normal",
+                    !dueDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dueDate ? format(dueDate, "PPP") : <span>Select date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dueDate}
+                  onSelect={(date) => form.setValue("dueDate", date!)}
+                  disabled={(date) => date < new Date()}
+                  autoFocus
+                />
+              </PopoverContent>
+            </Popover>
             {form.formState.errors.dueDate && (
               <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.dueDate.message}
@@ -170,4 +187,3 @@ const  BorrowModal = ({
     </Dialog>
   );
 }
-export default BorrowModal

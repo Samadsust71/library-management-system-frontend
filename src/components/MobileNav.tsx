@@ -8,7 +8,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { BarChart3, Book, Plus } from "lucide-react";
-
+import logo from "../assets/logo3.png"
 const MobileNav = () => {
   const navItems = [
     { href: "/books", label: "All Books", icon: Book },
@@ -42,13 +42,13 @@ const MobileNav = () => {
           {/* add this to hide dialog console error */}
           <SheetTitle>
               <SheetClose asChild>
-                <Link to={"/"} className="w-fit flex items-center h-16">
-                  <img
-                    src="/src/assets/logo.png"
-                    alt="logo"
-                    className="w-fit h-full"
-                  />
-                </Link>
+               <Link to={"/"} className="border border-[#3FCEB4] flex items-center justify-center rounded-full  h-10 w-10 ml-4 mt-2">
+              <img
+                src={logo}
+                alt="Library Logo"
+                className="w-full h-full object-contain"
+              />
+            </Link>
               </SheetClose>
           </SheetTitle>
           <SheetDescription>

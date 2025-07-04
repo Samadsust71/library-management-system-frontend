@@ -96,7 +96,8 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
       navigate("/books");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong.");
+      toast.error(error?.message || error?.data?.message || "Something went wrong.");
+      console.log(error)
     }
   };
 

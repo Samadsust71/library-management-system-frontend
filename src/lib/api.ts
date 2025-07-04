@@ -42,7 +42,7 @@ export const api = createApi({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: ( { id }) => [
+      invalidatesTags: ( id ) => [
         { type: 'Book', id },
         'Book',
         'BorrowSummary',

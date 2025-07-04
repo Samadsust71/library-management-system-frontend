@@ -76,7 +76,7 @@ const Footer = () => {
         </div>
         <div className="border-t border-gray-400 pt-8 mt-8 text-center text-sm text-accent-foreground/80">
           <p>
-            &copy; 2024 Baatighar. Built with React, Redux Toolkit Query, and
+            &copy; 2024 Library. Built with React, Redux Toolkit Query, and
             TypeScript.
           </p>
         </div>

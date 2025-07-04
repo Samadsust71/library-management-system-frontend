@@ -57,7 +57,7 @@ const Home = () => {
       </div>
       <BookTable books={books} onBorrowClick={handleBorrowClick} />
       <Link to="/books">
-        <Button className="bg-[#589770] text-white hover:bg-[#508a66]">
+        <Button className="bg-[#03C2A6] text-white hover:bg-[#03c2a5e1]">
           Discover More
           <ArrowRight className="w-4 h-4" />
         </Button>

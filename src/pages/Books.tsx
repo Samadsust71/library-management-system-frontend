@@ -11,26 +11,28 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Search } from "lucide-react";
-import type { DBBook } from "@/types/schema";
+import { genres, type DBBook } from "@/types/schema";
 import { Link } from "react-router";
 import BorrowModal from "@/components/BorrowModal";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
 
-// const ITEMS_PER_PAGE = 5;
 
-export default function Books() {
+ const  Books= ()=> {
   const [selectedBook, setSelectedBook] = useState<DBBook | null>(null);
   const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [genreFilter, setGenreFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
- const { data, isLoading, error } = useGetBooksQuery({
+  const { data, isLoading, error } = useGetBooksQuery({
     page: currentPage,
     limit: itemsPerPage,
+    search:searchTerm,
+    genre: genreFilter,
+    status: statusFilter,
   });
 
   const books = Array.isArray(data?.data) ? data.data : [];
@@ -45,53 +47,36 @@ export default function Books() {
     setIsBorrowModalOpen(false);
     setSelectedBook(null);
   };
- useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
-  }, [itemsPerPage]);
+  }, [itemsPerPage, searchTerm, genreFilter, statusFilter]);
 
-  const filteredBooks = books.filter((book) => {
-    const matchesSearch =
-      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.isbn.includes(searchTerm);
-
-    const matchesGenre =
-      genreFilter === "all" || book.genre.toLowerCase() === genreFilter;
-
-    const matchesStatus =
-      statusFilter === "all" ||
-      (statusFilter === "available" && book.copies > 0) ||
-      (statusFilter === "unavailable" && book.copies === 0);
-
-    return matchesSearch && matchesGenre && matchesStatus;
-  });
-
-  const uniqueGenres = [...new Set(books.map((book) => book.genre))];
-
-   const handlePageChange = (page: number) => {
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
   if (isLoading) {
-    return (
-     <Loading/>
-    );
+    return <Loading />;
   }
 
   if (error) {
     return (
-      <Error errorTitle="Error Loading Books" errorDescription="Failed to load books. Please try again."/>
+      <Error
+        errorTitle="Error Loading Books"
+        errorDescription="Failed to load books. Please try again."
+      />
     );
   }
-
   return (
-    <div>
+    <>
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-semibold text-card-foreground">All Books</h2>
+          <h2 className="text-2xl font-semibold text-card-foreground">
+            All Books
+          </h2>
           <p className="text-muted-foreground mt-1">
             Manage your library collection
           </p>
@@ -124,8 +109,8 @@ export default function Books() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Genres</SelectItem>
-                {uniqueGenres.map((genre) => (
-                  <SelectItem key={genre} value={genre.toLowerCase()}>
+                {genres.map((genre) => (
+                  <SelectItem key={genre} value={genre.toUpperCase()}>
                     {genre}
                   </SelectItem>
                 ))}
@@ -161,41 +146,41 @@ export default function Books() {
       </div>
 
       {/* Book Table */}
-      <BookTable books={filteredBooks} onBorrowClick={handleBorrowClick} />
+      <BookTable books={books} onBorrowClick={handleBorrowClick} />
 
       {/* Pagination */}
-      {
-        books.length && <div className="flex justify-center mt-6 gap-2 flex-wrap">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Prev
-        </Button>
-
-        {[...Array(totalPages)].map((_, index) => (
+      {books.length > 0 && (
+        <div className="flex justify-center mt-6 gap-2 flex-wrap">
           <Button
-            key={index}
-            variant={currentPage === index + 1 ? "default" : "outline"}
+            variant="outline"
             size="sm"
-            onClick={() => handlePageChange(index + 1)}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
           >
-            {index + 1}
+            Prev
           </Button>
-        ))}
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </Button>
-      </div>
-      }
+          {[...Array(totalPages)].map((_, index) => (
+            <Button
+              key={index}
+              variant={currentPage === index + 1 ? "default" : "outline"}
+              size="sm"
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </Button>
+          ))}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      )}
 
       {/* Borrow Modal */}
       <BorrowModal
@@ -203,6 +188,8 @@ export default function Books() {
         isOpen={isBorrowModalOpen}
         onClose={handleCloseBorrowModal}
       />
-    </div>
+    </>
   );
 }
+
+export default Books

@@ -1,4 +1,5 @@
 
+import RouteError from "@/components/RouteError";
 import RootLayout from "@/layouts/RootLayout";
 import AddBook from "@/pages/AddBook";
 import BookDetails from "@/pages/BookDetails";
@@ -12,6 +13,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout/>,
+    errorElement:<RouteError />,
     children:[
         {
             path:"/",

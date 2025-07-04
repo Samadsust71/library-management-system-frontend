@@ -164,7 +164,8 @@ export default function Books() {
       <BookTable books={filteredBooks} onBorrowClick={handleBorrowClick} />
 
       {/* Pagination */}
-      <div className="flex justify-center mt-6 gap-2 flex-wrap">
+      {
+        books.length && <div className="flex justify-center mt-6 gap-2 flex-wrap">
         <Button
           variant="outline"
           size="sm"
@@ -194,6 +195,7 @@ export default function Books() {
           Next
         </Button>
       </div>
+      }
 
       {/* Borrow Modal */}
       <BorrowModal

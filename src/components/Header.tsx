@@ -1,11 +1,9 @@
 import { BarChart3, Book, Plus } from "lucide-react";
-import { Button } from "./ui/button";
-
 import { Link, useLocation } from "react-router";
 import ModeToggle from "./ModeToggle";
+import MobileNav from "./MobileNav";
 
 const Header = () => {
-  
   const location = useLocation();
   const navItems = [
     { href: "/books", label: "All Books", icon: Book },
@@ -15,19 +13,22 @@ const Header = () => {
 
   const isActive = (href: string) => {
     const path = location.pathname;
-    if (href === "/books") return  path === "/books";
+    if (href === "/books") return path === "/books";
     return path.startsWith(href);
   };
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-10 supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to={"/"} className=" w-fit flex items-center h-16">
-          <img
-            src="/src/assets/logo.png"
-            alt="logo"
-            className="w-fit h-full"
-          />
-        </Link>
+        <div className="flex items-center h-32">
+          <Link to={"/"} className="flex items-center justify-center">
+            <img
+              src="/src/assets/logo2.png"
+              alt="logo"
+              className="h-32 w-full object-cover"
+            />
+            {/* <h1 className="text-[#589770] text-xl font-bold">Baatighar</h1> */}
+          </Link>
+        </div>
         <div className="hidden md:flex space-x-8">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -48,26 +49,8 @@ const Header = () => {
           })}
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant={"outline"}
-            className="md:hidden text-primary border border-primary"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </Button>
-
-          <ModeToggle/>
+          <ModeToggle />
+          <MobileNav />
         </div>
       </nav>
     </header>

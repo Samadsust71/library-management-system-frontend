@@ -22,7 +22,7 @@ const Footer = () => {
                   alt="logo"
                   className="h-16 object-cover"
                 />
-                <h1 className="text-[#3BAA4A] text-xl font-bold">Baatighar</h1>
+                <h1 className="text-[#589770] text-xl font-bold">Baatighar</h1>
               </Link>
             </div>
             <p className="text-sm text-accent-foreground/80">

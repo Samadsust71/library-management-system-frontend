@@ -14,9 +14,12 @@ export interface Book {
 }
 
 export interface Borrow  {
-  book:string;
-  quantity: number;
-  dueDate: Date;
+  book:{
+    title:string;
+    isbn:string
+  };
+  totalQuantity: number;
+  dueDates: string[];
 }
 // export interface DBBorrow extends Borrow  {
 //   _id:string;

@@ -17,7 +17,6 @@ import { toast } from "sonner";
 import { useBorrowBookMutation } from "@/lib/api";
 import type { DBBook } from "@/types/schema";
 
-// ✅ Extended Zod schema with type conversion and validations
 const borrowSchema = z.object({
   book: z.string().min(1, "Book ID is required"),
   quantity: z.coerce.number().min(1, "At least 1 book must be borrowed"),
@@ -42,11 +41,11 @@ interface BorrowModalProps {
   onClose: () => void;
 }
 
-export default function BorrowModal({
+const  BorrowModal = ({
   book,
   isOpen,
   onClose,
-}: BorrowModalProps) {
+}: BorrowModalProps) => {
   const [borrowBook, { isLoading }] = useBorrowBookMutation();
 
   const form = useForm<BorrowFormData>({
@@ -58,7 +57,6 @@ export default function BorrowModal({
     },
   });
 
-  // 📅 Set default due date to 2 weeks from now
   useEffect(() => {
     const twoWeeksFromNow = new Date();
     twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
@@ -66,7 +64,6 @@ export default function BorrowModal({
     form.setValue("dueDate", formattedDate);
   }, [form]);
 
-  // 🆔 Update form when book changes
   useEffect(() => {
     if (book) {
       form.setValue("book", book._id);
@@ -76,7 +73,6 @@ export default function BorrowModal({
 
   const onSubmit = async (data: BorrowFormData) => {
     try {
-        console.log(data)
       await borrowBook(data).unwrap();
       toast.success(`"${book?.title}" has been successfully borrowed.`);
       onClose();
@@ -99,7 +95,7 @@ export default function BorrowModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-full max-w-md">
+      <DialogContent className="w-full max-w-md bg-card text-card-foreground">
         <DialogHeader>
           <DialogTitle>Borrow Book</DialogTitle>
         </DialogHeader>
@@ -107,15 +103,15 @@ export default function BorrowModal({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label>Book</Label>
-            <div className="p-3 bg-gray-50 rounded-lg mt-2">
+            <div className="p-3 bg-muted rounded-lg mt-2">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-12 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded flex items-center justify-center flex-shrink-0">
                   <BookIcon className="text-white text-xs" />
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900">{book.title}</h4>
-                  <p className="text-sm text-gray-600">{book.author}</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <h4 className="font-medium text-card-foreground">{book.title}</h4>
+                  <p className="text-sm text-muted-foreground">{book.author}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
                     Available: {book.copies} copies
                   </p>
                 </div>
@@ -134,7 +130,7 @@ export default function BorrowModal({
               className="mt-2"
             />
             {form.formState.errors.quantity && (
-              <p className="text-sm text-error-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.quantity.message}
               </p>
             )}
@@ -150,18 +146,14 @@ export default function BorrowModal({
               className="mt-2"
             />
             {form.formState.errors.dueDate && (
-              <p className="text-sm text-error-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.dueDate.message}
               </p>
             )}
           </div>
 
           <div className="flex items-center gap-3 pt-4">
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="flex-1 "
-            >
+            <Button type="submit" disabled={isLoading} className="flex-1">
               {isLoading ? "Borrowing..." : "Borrow Book"}
             </Button>
             <Button
@@ -178,3 +170,4 @@ export default function BorrowModal({
     </Dialog>
   );
 }
+export default BorrowModal

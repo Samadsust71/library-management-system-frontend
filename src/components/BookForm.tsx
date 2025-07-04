@@ -30,7 +30,7 @@ import type { DBBook } from "@/types/schema";
 import { genres } from "@/types/schema";
 
 interface BookFormProps {
-  book?: DBBook; // Include _id if editing
+  book?: DBBook;
   onCancel: () => void;
 }
 
@@ -52,7 +52,6 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
   const navigate = useNavigate();
   const [createBook, { isLoading: isCreating }] = useCreateBookMutation();
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
-
 
   const isEditing = !!book;
   const isLoading = isCreating || isUpdating;
@@ -108,18 +107,18 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
           <Button variant="ghost" size="sm" onClick={onCancel}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-2xl font-semibold text-card-foreground">
             {isEditing ? "Edit Book" : "Add New Book"}
           </h2>
         </div>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           {isEditing
             ? "Update the book details"
             : "Enter the book details to add it to your library"}
         </p>
       </div>
 
-      <div className="rounded-lg shadow-sm border p-6">
+      <div className="bg-card text-card-foreground rounded-lg shadow-sm border p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -252,15 +251,15 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
               )}
             />
 
-            <div className="flex items-center gap-4 pt-4 border-t">
+            <div className="flex items-center gap-4 pt-4 border-t border-border">
               <Button type="submit" disabled={isLoading}>
                 {isLoading
                   ? isEditing
                     ? "Updating..."
                     : "Adding..."
                   : isEditing
-                    ? "Update Book"
-                    : "Add Book"}
+                  ? "Update Book"
+                  : "Add Book"}
               </Button>
               <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel

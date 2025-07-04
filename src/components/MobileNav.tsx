@@ -1,0 +1,85 @@
+import { Link } from "react-router";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
+import { BarChart3, Book, Plus } from "lucide-react";
+
+const MobileNav = () => {
+  const navItems = [
+    { href: "/books", label: "All Books", icon: Book },
+    { href: "/create-book", label: "Add Book", icon: Plus },
+    { href: "/borrow-summary", label: "Borrow Summary", icon: BarChart3 },
+  ];
+  const isActive = (href: string) => {
+    const path = location.pathname;
+    if (href === "/books") return path === "/books";
+    return path.startsWith(href);
+  };
+  return (
+    <div className="md:hidden">
+      <Sheet>
+        <SheetTrigger className="flex justify-center items-center ">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </SheetTrigger>
+        <SheetContent className="flex flex-col ">
+          {/* add this to hide dialog console error */}
+          <SheetTitle>
+              <SheetClose asChild>
+                <Link to={"/"} className="w-fit flex items-center h-16">
+                  <img
+                    src="/src/assets/logo.png"
+                    alt="logo"
+                    className="w-fit h-full"
+                  />
+                </Link>
+              </SheetClose>
+          </SheetTitle>
+          <SheetDescription>
+            <span></span>
+          </SheetDescription>
+
+          {/* nav links */}
+          <ul className="flex flex-col items-center justify-center gap-8 mt-16">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <SheetClose asChild key={item.href}>
+                  <Link
+                    to={item.href}
+                    className={`flex flex-col items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive(item.href)
+                        ? "text-primary hover:text-primary/70"
+                        : "text-primary/70"
+                    }`}
+                  >
+                    <Icon size={16} />
+                    {item.label}
+                  </Link>
+                </SheetClose>
+              );
+            })}
+          </ul>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+};
+
+export default MobileNav;

@@ -13,11 +13,10 @@ interface PaginatedBooksResponse {
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api',
+    baseUrl: 'https://library-management-app-eta.vercel.app/api',
   }),
   tagTypes: ['Book', 'BorrowRecord', 'BorrowSummary'],
   endpoints: (builder) => ({
-    // ✅ Paginated getBooks endpoint
     getBooks: builder.query<PaginatedBooksResponse, { page?: number; limit?: number }>({
       query: ({ page = 1, limit = 10 } = {}) => `/books?page=${page}&limit=${limit}`,
       providesTags: ['Book'],
@@ -25,7 +24,7 @@ export const api = createApi({
 
     getBook: builder.query({
       query: (id) => `/books/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Book', id }],
+      providesTags: (id) => [{ type: 'Book', id }],
     }),
 
     createBook: builder.mutation({
@@ -43,7 +42,7 @@ export const api = createApi({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: ( { id }) => [
         { type: 'Book', id },
         'Book',
         'BorrowSummary',

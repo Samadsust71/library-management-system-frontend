@@ -3,6 +3,7 @@ import BookForm from '@/components/BookForm';
 import { Book } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router';
+import Loading from '@/components/Loading';
 
 export default function EditBook() {
   const { id } = useParams();
@@ -17,24 +18,7 @@ export default function EditBook() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="h-6 w-6 bg-muted rounded animate-pulse" />
-          <div className="h-8 bg-muted rounded w-48 animate-pulse" />
-        </div>
-        <div className="bg-card text-card-foreground rounded-lg shadow-sm border p-6 animate-pulse">
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="space-y-2">
-                  <div className="h-4 bg-muted rounded w-20" />
-                  <div className="h-10 bg-muted rounded" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <Loading/>
     );
   }
 

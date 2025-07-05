@@ -56,13 +56,13 @@ npm run dev
 
 ```bash
 src/
-├── components/         # Reusable UI components
-├── lib/api.ts          # API slice (Redux Toolkit Query)
-├── pages/              # Route-level components
-├── types/schema.ts     # TypeScript types
-├── assets/             # Static images (e.g., logo)
-├── layout              # App layout 
-└── main.tsx            # Entry point
+├── components/            # Reusable UI components
+├── redux/store/store.ts   # API slice (Redux Toolkit Query)
+├── pages/                 # Route-level components
+├── types/schema.ts        # TypeScript types
+├── assets/                # Static images (e.g., logo)
+├── layout                 # App layout 
+└── main.tsx               # Entry point
 ```
 
 ---

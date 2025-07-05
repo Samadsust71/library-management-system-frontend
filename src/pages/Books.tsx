@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useGetBooksQuery } from "@/lib/api";
 import BookTable from "@/components/BookTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,11 +15,19 @@ import { Link } from "react-router";
 import BorrowModal from "@/components/BorrowModal";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/redux/store/store";
+import {
+  closeBorrowModal,
+  openBorrowModal,
+} from "@/redux/store/slices/modalSlice";
+import { useGetBooksQuery } from "@/redux/store/api";
 
-
- const  Books= ()=> {
-  const [selectedBook, setSelectedBook] = useState<DBBook | null>(null);
-  const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
+const Books = () => {
+  const dispatch = useDispatch();
+  const { isBorrowModalOpen, selectedBook } = useSelector(
+    (state: RootState) => state.modal
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [genreFilter, setGenreFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -30,7 +37,7 @@ import Error from "@/components/Error";
   const { data, isLoading, error } = useGetBooksQuery({
     page: currentPage,
     limit: itemsPerPage,
-    search:searchTerm,
+    search: searchTerm,
     genre: genreFilter,
     status: statusFilter,
   });
@@ -39,13 +46,11 @@ import Error from "@/components/Error";
   const totalPages = data?.meta?.totalPages || 1;
 
   const handleBorrowClick = (book: DBBook) => {
-    setSelectedBook(book);
-    setIsBorrowModalOpen(true);
+    dispatch(openBorrowModal(book));
   };
 
   const handleCloseBorrowModal = () => {
-    setIsBorrowModalOpen(false);
-    setSelectedBook(null);
+    dispatch(closeBorrowModal());
   };
   useEffect(() => {
     setCurrentPage(1);
@@ -190,6 +195,6 @@ import Error from "@/components/Error";
       />
     </>
   );
-}
+};
 
-export default Books
+export default Books;

@@ -22,13 +22,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import {
-  useCreateBookMutation,
-  useUpdateBookMutation,
-} from "@/lib/api";
 import type { DBBook } from "@/types/schema";
 import { genres } from "@/types/schema";
-
+import { useCreateBookMutation, useUpdateBookMutation } from "@/redux/store/api";
 interface BookFormProps {
   book?: DBBook;
   onCancel: () => void;
@@ -48,7 +44,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function BookForm({ book, onCancel }: BookFormProps) {
+const BookForm =({ book, onCancel }: BookFormProps) => {
   const navigate = useNavigate();
   const [createBook, { isLoading: isCreating }] = useCreateBookMutation();
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
@@ -272,3 +268,5 @@ export default function BookForm({ book, onCancel }: BookFormProps) {
     </div>
   );
 }
+
+export default BookForm

@@ -1,9 +1,10 @@
-import { useGetBookQuery } from '@/lib/api';
+
 import BookForm from '@/components/BookForm';
 import { Book } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router';
 import Loading from '@/components/Loading';
+import { useGetBookQuery } from '@/redux/store/api';
 
 export default function EditBook() {
   const { id } = useParams();

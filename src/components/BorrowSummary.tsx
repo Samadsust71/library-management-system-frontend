@@ -6,13 +6,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetBorrowSummaryQuery } from "@/lib/api";
+// import { useGetBorrowSummaryQuery } from "@/lib/api";
 import { Book, Users, Clock } from "lucide-react";
 import { format } from "date-fns";
 import type { Borrow } from "@/types/schema";
 import Loading from "./Loading";
 import Error from "./Error";
 import { getBookColor } from "@/lib/utils";
+import { useGetBorrowSummaryQuery } from "@/redux/store/api";
 
 export default function BorrowSummary() {
   const { data, isLoading, error } = useGetBorrowSummaryQuery(undefined);

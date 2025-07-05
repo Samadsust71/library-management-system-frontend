@@ -21,16 +21,16 @@ import {
 import { Book as BookIcon, Edit, Eye, HandHeart, Trash2 } from "lucide-react";
 import type { DBBook } from "@/types/schema";
 import { toast } from "sonner";
-import { useDeleteBookMutation } from "@/lib/api";
 import { Link } from "react-router";
 import { getBookColor } from "@/lib/utils";
+import { useDeleteBookMutation } from "@/redux/store/api";
 
 interface BookTableProps {
   books: DBBook[];
   onBorrowClick: (book: DBBook) => void;
 }
 
-const BookTable=({ books, onBorrowClick }: BookTableProps) =>{
+const BookTable = ({ books, onBorrowClick }: BookTableProps) => {
   const [deleteBook] = useDeleteBookMutation();
 
   const handleDelete = async (book: DBBook) => {
@@ -201,6 +201,6 @@ const BookTable=({ books, onBorrowClick }: BookTableProps) =>{
       </div>
     </div>
   );
-}
+};
 
-export default BookTable
+export default BookTable;

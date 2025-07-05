@@ -1,28 +1,32 @@
-import { useGetBookQuery } from "@/lib/api";
+
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit, Book } from "lucide-react";
 import { Link, useParams } from "react-router";
 import type { DBBook } from "@/types/schema";
 import Loading from "@/components/Loading";
 import Error from "@/components/Error";
-import { useState } from "react";
 import BorrowModal from "@/components/BorrowModal";
+import { useGetBookQuery } from "@/redux/store/api";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/redux/store/store";
+import { closeBorrowModal, openBorrowModal } from "@/redux/store/slices/modalSlice";
 
 const BookDetails = () => {
   const { id } = useParams();
   const { data, isLoading, error } = useGetBookQuery(id);
-  const [selectedBook, setSelectedBook] = useState<DBBook | null>(null);
-  const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
+  const dispatch = useDispatch();
+const { isBorrowModalOpen, selectedBook } = useSelector(
+  (state: RootState) => state.modal
+);
   const book: DBBook | null = data?.data ?? null;
 
   const handleBorrowClick = (book: DBBook) => {
-    setSelectedBook(book);
-    setIsBorrowModalOpen(true);
-  };
-  const handleCloseBorrowModal = () => {
-    setIsBorrowModalOpen(false);
-    setSelectedBook(null);
-  };
+      dispatch(openBorrowModal(book));
+   };
+ 
+   const handleCloseBorrowModal = () => {
+   dispatch(closeBorrowModal());
+ };
   if (isLoading) {
     return <Loading />;
   }

@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -22,8 +23,9 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, Book as BookIcon } from "lucide-react";
 import { toast } from "sonner";
-import { useBorrowBookMutation } from "@/lib/api";
+// import { useBorrowBookMutation } from "@/lib/api";
 import type { DBBook } from "@/types/schema";
+import { useBorrowBookMutation } from "@/redux/store/api";
 
 const borrowSchema = z.object({
   book: z.string().min(1, "Book ID is required"),
@@ -96,7 +98,8 @@ export default function BorrowModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-full max-w-md bg-card text-card-foreground">
+      <DialogDescription className="sr-only"></DialogDescription>
+      <DialogContent  className="w-full max-w-md bg-card text-card-foreground">
         <DialogHeader>
           <DialogTitle>Borrow Book</DialogTitle>
         </DialogHeader>

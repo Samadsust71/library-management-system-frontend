@@ -2,7 +2,7 @@
 import BookForm from '@/components/BookForm';
 import {  useNavigate } from 'react-router';
 
-export default function AddBook() {
+const AddBook = () => {
   const navigate = useNavigate();
 
   const handleCancel = () => {
@@ -11,3 +11,5 @@ export default function AddBook() {
 
   return <BookForm onCancel={handleCancel} />;
 }
+
+export default AddBook

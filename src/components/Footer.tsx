@@ -1,6 +1,6 @@
 import { BarChart3, Book, Plus } from "lucide-react";
 import { Link } from "react-router";
-import logo from "../assets/logo3.png"
+import logo from "../assets/logo3.png";
 const Footer = () => {
   const navItems = [
     { href: "/books", label: "All Books", icon: Book },
@@ -12,7 +12,10 @@ const Footer = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <Link to={"/"} className="border border-[#3FCEB4] flex items-center justify-center rounded-full  h-16 w-16 mb-4">
+            <Link
+              to={"/"}
+              className="border border-[#3FCEB4] flex items-center justify-center rounded-full  h-16 w-16 mb-4"
+            >
               <img
                 src={logo}
                 alt="Library Logo"

@@ -74,8 +74,8 @@ export default function BorrowSummary() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center">
-            <div className="p-3 bg-primary/10 rounded-lg">
-              <Book className="text-primary text-xl" />
+            <div className="p-3 bg-blue-100 rounded-lg">
+              <Book className="text-blue-700 text-xl" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-muted-foreground">
@@ -90,8 +90,8 @@ export default function BorrowSummary() {
 
         <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center">
-            <div className="p-3 bg-success/10 rounded-lg">
-              <Users className="text-success text-xl" />
+            <div className="p-3 bg-cyan-100 rounded-lg">
+              <Users className="text-[#3FCEB4] text-xl" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-muted-foreground">
@@ -106,8 +106,8 @@ export default function BorrowSummary() {
 
         <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center">
-            <div className="p-3 bg-warning/10 rounded-lg">
-              <Clock className="text-warning text-xl" />
+            <div className="p-3 bg-red-100 rounded-lg">
+              <Clock className="text-red-700 text-xl" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-muted-foreground">
@@ -130,7 +130,7 @@ export default function BorrowSummary() {
 
         {borrowSummary.length === 0 ? (
           <div className="p-8 text-center">
-            <div className="text-muted-foreground/70 mb-4">
+            <div className="text-[#3FCEB4] mb-4">
               <Book className="w-16 h-16 mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-card-foreground mb-2">

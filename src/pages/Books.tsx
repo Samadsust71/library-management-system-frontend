@@ -32,7 +32,7 @@ const Books = () => {
   const [genreFilter, setGenreFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const { data, isLoading, error } = useGetBooksQuery({
     page: currentPage,
@@ -144,6 +144,7 @@ const Books = () => {
                 <SelectItem value="5">5 books per page</SelectItem>
                 <SelectItem value="10">10 books per page</SelectItem>
                 <SelectItem value="20">20 books per page</SelectItem>
+                <SelectItem value="30">30 books per page</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -40,11 +40,11 @@ const Header = () => {
                 to={item.href}
                 className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.href)
-                    ? "text-primary hover:text-primary/70"
-                    : "text-primary/70"
+                    ? "text-primary "
+                    : "text-primary/60 hover:text-primary"
                 }`}
               >
-                <Icon size={16} />
+                <Icon className={`${isActive(item.href)?"text-[#3FCEB4]":"text-primary/60"}`} size={16} />
                 {item.label}
               </Link>
             );
